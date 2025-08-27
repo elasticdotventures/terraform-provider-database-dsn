@@ -1,4 +1,4 @@
-module github.com/elasticdotventures/terraform-provider-database_dsn
+module github.com/elasticdotventures/terraform-provider-database-dsn
 
 go 1.23.7
 

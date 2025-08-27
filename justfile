@@ -40,7 +40,7 @@ test:
 # Build the provider
 build:
     @echo "🔨 Building provider..."
-    go build -o terraform-provider-database_dsn
+    go build -o terraform-provider-database-dsn
 
 # Lint and format code
 lint:
@@ -211,7 +211,7 @@ _create_release VERSION:
     
     echo "🚀 Release $version created and pushed!"
     echo "📦 GitHub Actions will now build and publish to Terraform Registry"
-    echo "🔗 Monitor the release at: https://github.com/elasticdotventures/terraform-provider-database_dsn/actions"
+    echo "🔗 Monitor the release at: https://github.com/elasticdotventures/terraform-provider-database-dsn/actions"
 
 # Release patch version (x.y.Z+1)
 release-patch: _pre_release_checks
@@ -285,7 +285,7 @@ preview-changelog TYPE="patch":
 # Clean up build artifacts
 clean:
     @echo "🧹 Cleaning up..."
-    rm -f terraform-provider-database_dsn
+    rm -f terraform-provider-database-dsn
     go clean
 
 # Install just if not present

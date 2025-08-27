@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     database_dsn = {
-      source = "elasticdotventures/database_dsn"
+      source = "elasticdotventures/database-dsn"
     }
   }
 }

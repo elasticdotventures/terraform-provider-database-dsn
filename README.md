@@ -84,13 +84,13 @@ Then commit the changes to `go.mod` and `go.sum`.
 
 ## Installation
 
-This provider is available on the [Terraform Registry](https://registry.terraform.io/providers/elasticdotventures/database_dsn).
+This provider is available on the [Terraform Registry](https://registry.terraform.io/providers/elasticdotventures/database-dsn).
 
 ```hcl
 terraform {
   required_providers {
     database_dsn = {
-      source = "elasticdotventures/database_dsn"
+      source = "elasticdotventures/database-dsn"
     }
   }
 }
