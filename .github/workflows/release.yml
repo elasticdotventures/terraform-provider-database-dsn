@@ -39,3 +39,15 @@ jobs:
           # GitHub sets the GITHUB_TOKEN secret automatically.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+  
+  terraform-registry:
+    needs: goreleaser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Push to Terraform Registry
+        uses: terraform-providers/terraform-cloud-provider-push@v1
+        with:
+          api-token: ${{ secrets.TF_CLOUD_API_TOKEN }}
+          organization: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          workspace: ${{ secrets.TF_CLOUD_WORKSPACE }}
