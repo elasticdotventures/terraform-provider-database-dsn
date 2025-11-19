@@ -1,18 +1,57 @@
-# Terraform Provider Scaffolding (Terraform Plugin Framework)
+# Terraform Provider Database DSN
 
-_This template repository is built on the [Terraform Plugin Framework](https://github.com/hashicorp/terraform-plugin-framework). The template repository built on the [Terraform Plugin SDK](https://github.com/hashicorp/terraform-plugin-sdk) can be found at [terraform-provider-scaffolding](https://github.com/hashicorp/terraform-provider-scaffolding). See [Which SDK Should I Use?](https://developer.hashicorp.com/terraform/plugin/framework-benefits) in the Terraform documentation for additional information._
+A Terraform provider for building and parsing database DSN (Data Source Name) connection strings. This provider eliminates HCL toil when handling database connection components like `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, etc.
 
-This repository is a *template* for a [Terraform](https://www.terraform.io) provider. It is intended as a starting point for creating Terraform providers, containing:
+## Features
 
-- A resource and a data source (`internal/provider/`),
-- Examples (`examples/`) and generated documentation (`docs/`),
-- Miscellaneous meta files.
+- **`database_dsn_build`**: Build database DSNs from individual components
+- **`database_dsn_parse`**: Parse existing DSNs into individual components
+- Support for multiple database drivers (PostgreSQL, MySQL, SQL Server, etc.)
+- Secure handling of sensitive data (passwords, DSNs)
+- Parameter support for additional connection options
 
-These files contain boilerplate code that you will need to edit to create your own Terraform provider. Tutorials for creating Terraform providers can be found on the [HashiCorp Developer](https://developer.hashicorp.com/terraform/tutorials/providers-plugin-framework) platform. _Terraform Plugin Framework specific guides are titled accordingly._
+## Data Sources
 
-Please see the [GitHub template repository documentation](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for how to create a new repository from this template on GitHub.
+### `database_dsn_build`
 
-Once you've written your provider, you'll want to [publish it on the Terraform Registry](https://developer.hashicorp.com/terraform/registry/providers/publishing) so that others can use it.
+Constructs a database DSN from component parts.
+
+```hcl
+data "database_dsn_build" "postgres" {
+  driver   = "postgres"
+  user     = "myuser"
+  password = var.db_password
+  host     = "localhost"
+  port     = 5432
+  name     = "myapp"
+  params = {
+    sslmode = "require"
+  }
+}
+
+output "connection_string" {
+  value     = data.database_dsn_build.postgres.dsn
+  sensitive = true
+}
+```
+
+### `database_dsn_parse`
+
+Parses an existing DSN into component parts.
+
+```hcl
+data "database_dsn_parse" "existing" {
+  dsn = var.database_url
+}
+
+output "db_host" {
+  value = data.database_dsn_parse.existing.host
+}
+
+output "db_port" {
+  value = data.database_dsn_parse.existing.port
+}
+```
 
 ## Requirements
 
@@ -43,9 +82,30 @@ go mod tidy
 
 Then commit the changes to `go.mod` and `go.sum`.
 
-## Using the provider
+## Installation
 
-Fill this in for each provider
+This provider is available on the [Terraform Registry](https://registry.terraform.io/providers/elasticdotventures/database-dsn).
+
+```hcl
+terraform {
+  required_providers {
+    database_dsn = {
+      source = "elasticdotventures/database-dsn"
+    }
+  }
+}
+
+provider "database_dsn" {
+  # No configuration required
+}
+```
+
+## Use Cases
+
+- **Environment Configuration**: Reduce the number of environment variables by storing database components in a single DSN
+- **Database Migration**: Parse existing connection strings and reconstruct them with different parameters
+- **Multi-Environment Deployments**: Build different DSNs for different environments while keeping the same Terraform configuration
+- **Security**: Centralize sensitive database credentials while maintaining component access
 
 ## Developing the Provider
 
